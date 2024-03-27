@@ -131,7 +131,7 @@
 				$userId = $row["userId"];
 				$_SESSION['userid'] = $userId;
 
-				if ($userRole == "2") {
+				if ($userRole == "2" || $userRole == "5") {
 					$_SESSION['username'] = $username;
 
 					echo "<script>";

@@ -5,12 +5,33 @@
 </head>
 
 <body>
+    <style>
+        .table th {
+            background-color: #f2f2f2;
+            /* Màu nền */
+            color: #333;
+            /* Màu chữ */
+            font-weight: bold;
+            /* Độ đậm của chữ */
+            padding: 10px;
+            /* Khoảng cách giữa nội dung và viền */
+            text-align: center;
+            /* Căn giữa nội dung */
+        }
+
+        /* CSS cho các ô dữ liệu */
+        .table td {
+            padding: 10px;
+            /* Khoảng cách giữa nội dung và viền */
+            text-align: left;
+            /* Căn trái nội dung */
+        }
+    </style>
     <?php
-    include_once ("connect.php");
+    include_once("connect.php");
     $articleId = $_GET['articleId'];
     $fileSql = "SELECT * FROM files WHERE articleId = $articleId";
     $fileResult = $conn->query($fileSql);
-    // Query to retrieve detailed information of the article from the database
     $sql = "SELECT articles.*, magazineName, users.Name as authorName FROM articles
         INNER JOIN users ON articles.authorId = users.userId
         INNER JOIN magazine ON magazine.magazineId = articles.magazineId
@@ -24,7 +45,7 @@
         echo '<div class="table-responsive table-responsive-x5">';
         echo '<table class="table table-bordered">';
         echo '<tr>';
-        echo '<th>Article Title</th>';
+        echo '<th>Name Article</th>';
         echo '<td>' . $row["title"] . '</td>';
         echo '</tr>';
         echo '<tr>';
@@ -99,17 +120,19 @@
 
         if ($commentResult->num_rows > 0) {
             echo '<div class="container mt-4">';
-            echo '<h6 class="modal-title">Comments</h6>';
+            echo '<h6 class="modal-title">Comments:</h6>';
             echo '<div class="card mb-3">';
             echo '<div class="card-body">';
             while ($commentRow = $commentResult->fetch_assoc()) {
                 echo '<div>';
-                echo '<small class="text-muted me-2 ">' . $commentRow['commentDate'] . '</small>';
-                echo '<smail class="card-subtitle mb-3 me-2">(' . $commentRow['email'] . ') </smail>';
-                echo '</div>';
-                echo '<div class="d-flex" style="align-items: baseline;">';
                 echo '<h6 class="card-subtitle mb-3 me-2 text-primary">' . $commentRow['authorName'] . ': </h6>';
                 echo '<p class="card-text">' . $commentRow['content'] . '</p>';
+                echo '<small class="text-muted me-2 ">' . $commentRow['commentDate'] . '</small>';
+                echo '<br>';
+                echo '<smail class="card-subtitle mb-3 me-2">(' . $commentRow['email'] . ') </smail>';
+                echo '<br>';
+                echo '</div>';
+                echo '<div class="d-flex" style="align-items: baseline;">';
                 echo '</div>';
             }
             echo '</div>';
@@ -120,14 +143,13 @@
             echo '<p>No comments found for this article.</p>';
             echo '</div>';
         }
-
     } else {
         echo 'Article information not found.';
     }
     ?>
     <script>
-        $(document).ready(function () {
-            $('.btn-edit-comment').click(function () {
+        $(document).ready(function() {
+            $('.btn-edit-comment').click(function() {
                 var commentId = $(this).data('comment-id');
                 var content = $(this).data('comment-content');
                 openCommentModal(commentId, content);
@@ -161,13 +183,13 @@
                         data: {
                             commentId: commentId
                         },
-                        success: function (response) {
+                        success: function(response) {
                             // Xử lý phản hồi từ server nếu cần
                             console.log(response);
                             // Tải lại trang để cập nhật danh sách comment
                             location.reload();
                         },
-                        error: function (xhr, status, error) {
+                        error: function(xhr, status, error) {
                             console.error(error);
                             // Hiển thị thông báo lỗi nếu có lỗi xảy ra
                             Swal.fire({

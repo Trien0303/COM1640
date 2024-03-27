@@ -174,7 +174,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                     echo '<td class="border-bottom-0"><p class="mb-0 fw-normal">' . $row["finalClosureDate"] . '</p></td>';
                     echo '<td class="border-bottom-0"><p class="mb-0 fw-normal">' . $row["magazineYear"] . '</p></td>';
                     echo '<td class="border-bottom-0">';
-                    echo '<button type="button" class="btn btn-primary btn-sm btn-edit" 
+                    echo '<button type="button" class="btn btn-secondary btn-sm btn-edit" 
                         data-bs-toggle="modal" 
                         data-bs-target="#magazineModal" 
                         data-magazine-id="' . $row["magazineId"] . '" 
@@ -183,7 +183,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                         data-closure-date="' . $row["closureDate"] . '"
                         data-final-closure-date="' . $row["finalClosureDate"] . '"
                         data-magazine-year="' . $row["magazineYear"] . '">Edit</button>';
-                    echo ' <button type="button" class="btn btn-danger btn-sm btn-delete" data-magazine-id="' . $row["magazineId"] . '">Delete</button>';
+                    echo ' <button type="button" class="btn btn-warning btn-sm btn-delete" data-magazine-id="' . $row["magazineId"] . '">Delete</button>';
                     echo '</td>';
                     
 

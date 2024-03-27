@@ -100,7 +100,7 @@
 
 <div class="container-fluid">
     <div class="card">
-            <div class="row">
+
                 <div class="col-lg-12 d-flex align-items-stretch">
                     <div class="card w-100">
                             <h2 class="card-title fw-semibold mb-4 text-center">Your Table Uploaded-Article</h2>
@@ -108,7 +108,7 @@
                             <div class="table-responsive">
                                 <table class="table tableEdit table-striped table-bordered">
                                     <thead>
-                                        <tr class="table-light">
+                                        <tr >
                                             <th>Title</th>
                                             <th>Content</th>
                                             <th>Submit Date</th>
@@ -185,7 +185,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 </div>
 
 <div class="modal fade" id="viewArticleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

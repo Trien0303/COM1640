@@ -8,6 +8,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
 
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,9 +19,10 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .no-click {
-    pointer-events: none;
-    opacity: 0.5;
-}
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
         /* CSS cho nút */
         .switch {
             display: inline-flex;
@@ -65,13 +67,14 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
 
         /* Các trạng thái của slider */
         .slider.active {
-            background-color: green;
+            background-color: blue;
             /* Màu nền cho trạng thái active */
         }
 
         .slider.pending {
-            background-color: blue;
+            background-color: yellow;
             /* Màu nền cho trạng thái pending */
+            color: black;
         }
 
         .slider.inactive {
@@ -114,18 +117,11 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
-
-                <!-- Sidebar navigation-->
                 <?php
                 include_once("sidebar.php");
                 ?>
-                <!-- End Sidebar navigation -->
-
             </div>
-            <!-- End Sidebar scroll-->
         </aside>
-        <!--  Sidebar End -->
-        <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
             <?php
@@ -136,7 +132,12 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
 
             <?php
             // Truy vấn SQL để lấy dữ liệu từ bảng articles
-            $sql = "SELECT * FROM `articles`";
+            $userId = $_SESSION['userid'];
+            $sql = "SELECT a.*, u.facultyId AS authorFacultyId, f.facultyName AS authorFacultyName
+        FROM articles a
+        INNER JOIN users u ON a.authorId = u.userId
+        INNER JOIN faculties f ON u.facultyId = f.facultyId
+        WHERE u.facultyId = (SELECT facultyId FROM users WHERE userId = '$userId')";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
@@ -226,7 +227,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
 
             <?php
                     echo '<td class="border-bottom-0">
-                    <button type="button" class="btn btn-primary btn-sm btn-view-details" data-article-id="' . $row["articleId"] . '">View Details</button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-view-details" data-article-id="' . $row["articleId"] . '">View Details</button>
 
                               </td>';
                     echo '<td class="border-bottom-0">
@@ -319,7 +320,6 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
     <script src="../assets/js/jquery.dataTables.js"></script>
 
     <script>
-        
         function toggleStatus(label, articleId) {
             var hiddenInput = label.querySelector('input[type="hidden"]');
             var slider = label.querySelector('.slider');
@@ -356,6 +356,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     // Xử lý phản hồi từ máy chủ nếu cần
                     console.log(xhr.responseText);
+
                 }
             };
             xhr.send("articleId=" + articleId + "&status=" + status);
@@ -392,61 +393,77 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
 
 
         document.addEventListener("DOMContentLoaded", function() {
-    // Lắng nghe sự kiện khi nhấn nút comment hoặc nút edit comment
-    $('.btn-comment, .btn-edit-comment').click(function() {
-        var articleId = $(this).data('article-id'); 
-        var action = $(this).data('action');  
-        console.log('Action:', action);
-        if (action === 'edit') {
-            // Nếu là nút edit comment, hiển thị modal chỉ để sửa comment
-            var commentId = $(this).data('comment-id'); // Lấy ID của comment cần chỉnh sửa
-            var commentContent = $(this).data('comment-content'); // Lấy nội dung của comment cần chỉnh sửa
-            
-            // Đặt giá trị cho form comment modal để sửa comment
-            $('#articleId').val(articleId);
-            $('#commentText').val(commentContent);
-            $('#commentModal .modal-title').text('Edit Comment');
-            $('#submitComment').text('Save'); // Đổi nút "Submit" thành "Save"
-            $('#commentModal').modal('show'); // Hiển thị modal form comment để chỉnh sửa comment
-        } else {
-            // Nếu không phải là nút edit comment, hiển thị modal comment để thêm mới
-            $('#articleId').val(articleId); // Đặt giá trị articleId cho trường ẩn trong form comment
-            $('#commentText').val(''); // Đặt giá trị mặc định cho trường commentText là rỗng
-            $('#commentModal .modal-title').text('Add Comment');
-            $('#submitComment').text('Submit'); // Đổi nút "Save" thành "Submit"
-            $('#commentModal').modal('show'); // Hiển thị modal form comment để thêm mới comment
-        }
-    });
+            // Lắng nghe sự kiện khi nhấn nút comment hoặc nút edit comment
+            $('.btn-comment, .btn-edit-comment').click(function() {
+                var articleId = $(this).data('article-id');
+                var action = $(this).data('action');
+                console.log('Action:', action);
+                if (action === 'edit') {
+                    // Nếu là nút edit comment, hiển thị modal chỉ để sửa comment
+                    var commentId = $(this).data('comment-id'); // Lấy ID của comment cần chỉnh sửa
+                    var commentContent = $(this).data(
+                        'comment-content'); // Lấy nội dung của comment cần chỉnh sửa
 
-    // Lắng nghe sự kiện khi gửi comment
-    $('#submitComment').click(function() {
-        var formData = $('#commentForm').serialize(); // Lấy dữ liệu từ form comment
-        $.ajax({
-            url: '../../Backend/process_comment.php', // Script PHP để xử lý comment
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                // Xử lý phản hồi từ server nếu cần
-                console.log(response);
-                $('#commentModal').modal('hide'); // Ẩn modal sau khi gửi comment thành công
-                $('#commentForm')[0].reset(); // Xóa các giá trị trong form comment để làm sạch form
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
+                    // Đặt giá trị cho form comment modal để sửa comment
+                    $('#articleId').val(articleId);
+                    $('#commentText').val(commentContent);
+                    $('#commentModal .modal-title').text('Edit Comment');
+                    $('#submitComment').text('Save'); // Đổi nút "Submit" thành "Save"
+                    $('#commentModal').modal('show'); // Hiển thị modal form comment để chỉnh sửa comment
+                } else {
+                    // Nếu không phải là nút edit comment, hiển thị modal comment để thêm mới
+                    $('#articleId').val(
+                        articleId); // Đặt giá trị articleId cho trường ẩn trong form comment
+                    $('#commentText').val(''); // Đặt giá trị mặc định cho trường commentText là rỗng
+                    $('#commentModal .modal-title').text('Add Comment');
+                    $('#submitComment').text('Submit'); // Đổi nút "Save" thành "Submit"
+                    $('#commentModal').modal('show'); // Hiển thị modal form comment để thêm mới comment
+                }
+            });
+
+            // Lắng nghe sự kiện khi gửi comment
+            $('#submitComment').click(function() {
+                var formData = $('#commentForm').serialize(); // Lấy dữ liệu từ form comment
+                $.ajax({
+                    url: '../../Backend/process_comment.php', // Script PHP để xử lý comment
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Hiển thị thông báo SweetAlert2 với nội dung là response
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response,
+                        }).then((result) => {
+                            // Nếu người dùng nhấn OK, ẩn modal và làm sạch form
+                            if (result.isConfirmed) {
+                                $('#commentModal').modal('hide');
+                                $('#commentForm')[0].reset();
+                            }
+                        });
+                    },
+
+                });
+            });
+
+            // Lắng nghe sự kiện khi đóng modal
+            $('#commentModal').on('hidden.bs.modal', function() {
+                $('#commentForm')[0].reset(); // Xóa các giá trị trong form comment khi đóng modal
+                $('#commentId').val('');
+                $('#articleId').val('');
+            });
         });
-    });
 
-    // Lắng nghe sự kiện khi đóng modal
-    $('#commentModal').on('hidden.bs.modal', function() {
-        $('#commentForm')[0].reset(); // Xóa các giá trị trong form comment khi đóng modal
-        $('#commentId').val('');
-        $('#articleId').val('');
-    });
-});
-
-
-        
+        function toggleNoClick(status) {
+            var elements = document.querySelectorAll('.switch');
+            elements.forEach(function(element) {
+                if (status === true) {
+                    element.classList.add('no-click');
+                } else {
+                    element.classList.remove('no-click');
+                }
+            });
+        }
     </script>
 
 

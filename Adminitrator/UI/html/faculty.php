@@ -162,12 +162,12 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                     echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-0">' . $row["facultyId"] . '</h6></td>';
                     echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-1">' . $row["facultyName"] . '</h6></td>';
                     echo '<td class="border-bottom-0">';
-                    echo '<button type="button" class="btn btn-primary btn-sm btn-edit" 
+                    echo '<button type="button" class="btn btn-secondary btn-sm btn-edit" 
                         data-bs-toggle="modal" 
                         data-bs-target="#facultyModal" 
                         data-faculty-id="' . $row["facultyId"] . '" 
                         data-faculty-name="' . $row["facultyName"] . '" >Edit</button>';
-                    echo ' <button type="button" class="btn btn-danger btn-sm btn-delete" data-faculty-id="' . $row["facultyId"] . '">Delete</button>';
+                    echo ' <button type="button" class="btn btn-warning btn-sm btn-delete" data-faculty-id="' . $row["facultyId"] . '">Delete</button>';
                     echo '</td>';
                     echo '</tr>';
                 }
@@ -296,7 +296,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                 }
             });
         });
-
+        
         // Sự kiện khi nhấp vào nút "Delete"
 $('.btn-delete').click(function() {
     // Lấy ID của khoa từ thuộc tính dữ liệu data-faculty-id

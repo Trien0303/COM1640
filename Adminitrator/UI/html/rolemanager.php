@@ -105,13 +105,13 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                     echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-0">' . $row["roleId"] . '</h6></td>';
                     echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-1">' . $row["roleName"] . '</h6></td>';
                     echo '<td class="border-bottom-0">';
-                    echo '<button type="button" class="btn btn-primary btn-sm btn-edit" 
+                    echo '<button type="button" class="btn btn-secondary btn-sm btn-edit" 
                     data-bs-toggle="modal" 
                     data-bs-target="#roleModal" 
                     data-role-id="' . $row["roleId"] . '" 
                     data-role-name="' . $row["roleName"] . '" 
                     >Edit</button>';
-                    echo ' <button type="button" class="btn btn-danger btn-sm btn-delete" data-role-id="' . $row["roleId"] . '">Delete</button>';
+                    echo ' <button type="button" class="btn btn-warning btn-sm btn-delete" data-role-id="' . $row["roleId"] . '">Delete</button>';
                     echo '</td>';
                     echo '</tr>';
                     

@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="container-fluid">
         <div class="card">
           <div class="card-body">
-            <h1 class="card-title">Create an account for system</h1>
+            <h1 class="card-title text-center">Create an account for system</h1>
             <br />
 
             <form class="forms-sample" action="#" method="post" enctype="multipart/form-data">
@@ -185,9 +185,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               </div>
 
               <br />
-              <button type="submit" class="btn btn-primary me-2" id="btnSubmit" name="btnSubmit">
-                Submit
-              </button>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <button type="submit" class="btn btn-info me-2" id="btnSubmit" name="btnSubmit">Submit</button>
+        </div>
             </form>
           </div>
         </div>
