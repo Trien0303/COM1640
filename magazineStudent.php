@@ -1,5 +1,5 @@
 <style>
-    /* Tùy chỉnh kích thước bảng */
+
     .table {
         width: 100%;
         max-width: 100%;
@@ -7,21 +7,21 @@
         background-color: transparent;
     }
 
-    /* Tùy chỉnh đường viền cho table, header và body */
+
     .table,
     .table th,
     .table td {
         border: 1px solid #dee2e6;
     }
 
-    /* Tùy chỉnh màu nền cho header */
+
     .table thead th {
         vertical-align: bottom;
         border-bottom: 2px solid #dee2e6;
         background-color: #f8f9fa;
     }
 
-    /* Tùy chỉnh kích thước của các header */
+
     .table th {
         padding: 0.75rem;
         vertical-align: top;
@@ -30,7 +30,7 @@
         text-align: center;
     }
 
-    /* Tùy chỉnh kích thước của các ô */
+
     .table td {
         padding: 0.75rem;
         vertical-align: top;
@@ -38,21 +38,20 @@
         text-align: center;
     }
 
-    /* Đặt màu nền cho tất cả các dòng */
     .table-striped tbody tr,
     .table tbody tr {
         background-color: rgba(0, 0, 0, 0.05);
-        /* Màu nền cho tất cả các dòng */
+
     }
 
-    /* Tùy chỉnh màu hover cho các dòng */
+
     .table tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.075);
-        /* Màu nền khi hover */
+
     }
 
 
-    /* Tùy chỉnh responsive */
+
     @media (max-width: 575.98px) {
         .table-responsive-sm {
             display: block;
@@ -69,12 +68,12 @@
 
     .table-container {
         padding: 20px;
-        /* hoặc bạn có thể sử dụng margin: 20px; */
+
     }
 </style>
 <?php
 if (isset($_SESSION['return']) && $_SESSION['return'] !== null) {
-    $title =  $_SESSION['return']; // Tạo tiêu đề có chứa $_SESSION['return']
+    $title =  $_SESSION['return']; 
     echo "<script>";
     echo "Swal.fire({";
     echo "    position: 'center',";
@@ -111,12 +110,20 @@ if (isset($_SESSION['return']) && $_SESSION['return'] !== null) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // Truy vấn SQL để lấy dữ liệu từ bảng magazines
+                                    
+                                    $currentDate = date("Y-m-d");
+
+                                 
                                     $sql = "SELECT * FROM magazine";
                                     $result = $conn->query($sql);
 
                                     if ($result->num_rows > 0) {
                                         while ($row = $result->fetch_assoc()) {
+                                           
+                                            $closureDate = $row["closureDate"];
+                                            $disabled = ($currentDate > $closureDate) ? "disabled" : ""; // Nếu ngày thực tế vượt quá closureDate, nút sẽ bị vô hiệu hóa
+
+                                           
                                     ?>
                                             <tr>
                                                 <td class="align-middle"><?php echo ($row["magazineName"]) ?></td>
@@ -125,14 +132,14 @@ if (isset($_SESSION['return']) && $_SESSION['return'] !== null) {
                                                 <td class="align-middle"><?php echo ($row["finalClosureDate"]) ?></td>
                                                 <td class="align-middle"><?php echo ($row["magazineYear"]) ?></td>
                                                 <td class="align-middle">
-                                                    <a href="?page=addArticleStudent&id=<?php echo ($row["magazineId"]) ?>" class="btn btn-primary">
+                                                    <a href="?page=addArticleStudent&id=<?php echo $row["magazineId"]; ?>" class="btn btn-primary <?php echo $disabled; ?>">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                                                             <path d="M7 0h2v16H7V0z" />
                                                             <path d="M0 7v2h16V7H0z" />
                                                         </svg>
                                                     </a>
-                                                </td>
 
+                                                </td>
                                             </tr>
                                     <?php
                                         }
@@ -140,6 +147,7 @@ if (isset($_SESSION['return']) && $_SESSION['return'] !== null) {
                                         echo "No data found.";
                                     }
                                     ?>
+
                                 </tbody>
                             </table>
                         </div>

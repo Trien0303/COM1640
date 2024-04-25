@@ -8,12 +8,12 @@ if (isset($_POST['articleId']) && isset($_POST['status'])) {
     $sql = "UPDATE articles SET status = $status WHERE articleId = $articleId";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Cập nhật trạng thái thành công";
+        echo "Update successful";
     } else {
         echo "Lỗi: " . $sql . "<br>" . $conn->error;
     }
 } else {
-    echo "Không có dữ liệu gửi từ phía client";
+    echo "No Data";
 }
 
 $conn->close();

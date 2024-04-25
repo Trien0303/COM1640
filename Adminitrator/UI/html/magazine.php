@@ -21,10 +21,10 @@ checkAccess([ROLE_ADMIN], $conn);
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="
+    <script src="
 https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js
 "></script>
-<link href="
+    <link href="
 https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
 " rel="stylesheet">
     <style>
@@ -126,12 +126,12 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
 
 
             <?php
-            // Truy vấn SQL để lấy dữ liệu từ bảng magazines
+    
             $sql = "SELECT * FROM magazine";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                // Bắt đầu bảng HTML
+               
                 echo '<div class="container-fluid">';
                 echo '<div class="card">';
                 echo '<div class="card-body">';
@@ -159,12 +159,12 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                 echo '<path d="M8 0q-.264 0-.523.017l.064.998a7 7 0 0 1 .918 0l.064-.998A8 8 0 0 0 8 0M6.44.152q-.52.104-1.012.27l.321.948q.43-.147.884-.237L6.44.153zm4.132.271a8 8 0 0 0-1.011-.27l-.194.98q.453.09.884.237zm1.873.925a8 8 0 0 0-.906-.524l-.443.896q.413.205.793.459zM4.46.824q-.471.233-.905.524l.556.83a7 7 0 0 1 .793-.458zM2.725 1.985q-.394.346-.74.74l.752.66q.303-.345.648-.648zm11.29.74a8 8 0 0 0-.74-.74l-.66.752q.346.303.648.648zm1.161 1.735a8 8 0 0 0-.524-.905l-.83.556q.254.38.458.793zM1.348 3.555q-.292.433-.524.906l.896.443q.205-.413.459-.793zM.423 5.428a8 8 0 0 0-.27 1.011l.98.194q.09-.453.237-.884zM15.848 6.44a8 8 0 0 0-.27-1.012l-.948.321q.147.43.237.884zM.017 7.477a8 8 0 0 0 0 1.046l.998-.064a7 7 0 0 1 0-.918zM16 8a8 8 0 0 0-.017-.523l-.998.064a7 7 0 0 1 0 .918l.998.064A8 8 0 0 0 16 8M.152 9.56q.104.52.27 1.012l.948-.321a7 7 0 0 1-.237-.884l-.98.194zm15.425 1.012q.168-.493.27-1.011l-.98-.194q-.09.453-.237.884zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a7 7 0 0 1-.458-.793zm13.828.905q.292-.434.524-.906l-.896-.443q-.205.413-.459.793zm-12.667.83q.346.394.74.74l.66-.752a7 7 0 0 1-.648-.648zm11.29.74q.394-.346.74-.74l-.752-.66q-.302.346-.648.648zm-1.735 1.161q.471-.233.905-.524l-.556-.83a7 7 0 0 1-.793.458zm-7.985-.524q.434.292.906.524l.443-.896a7 7 0 0 1-.793-.459zm1.873.925q.493.168 1.011.27l.194-.98a7 7 0 0 1-.884-.237zm4.132.271a8 8 0 0 0 1.012-.27l-.321-.948a7 7 0 0 1-.884.237l.194.98zm-2.083.135a8 8 0 0 0 1.046 0l-.064-.998a7 7 0 0 1-.918 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>';
                 echo '</svg></button></h6>';
                 echo '</th>';
-                
+
                 echo '</tr>';
                 echo '</thead>';
                 echo '<tbody>';
 
-                // Duyệt qua các dòng kết quả và hiển thị dữ liệu
+         
                 while ($row = $result->fetch_assoc()) {
                     echo '<tr>';
                     echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-0">' . $row["magazineId"] . '</h6></td>';
@@ -185,11 +185,11 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                         data-magazine-year="' . $row["magazineYear"] . '">Edit</button>';
                     echo ' <button type="button" class="btn btn-warning btn-sm btn-delete" data-magazine-id="' . $row["magazineId"] . '">Delete</button>';
                     echo '</td>';
-                    
+
 
                     echo '</tr>';
                 }
-                // Kết thúc bảng HTML
+          
                 echo '</tbody>';
                 echo '</table>';
                 echo '</div>';
@@ -254,10 +254,9 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                             <label for="magazineYear" class="form-label">Magazine Year</label>
                             <select class="form-select" id="magazineYear" name="magazineYear">
                                 <?php
-                                // Lấy năm hiện tại
+                          
                                 $currentYear = date("Y");
 
-                                // Tạo một vòng lặp để tạo các tùy chọn cho dropdown từ năm hiện tại đến 10 năm sau
                                 for ($year = $currentYear; $year <= $currentYear + 10; $year++) {
                                     echo '<option value="' . $year . '">' . $year . '</option>';
                                 }
@@ -275,6 +274,9 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
             </div>
         </div>
     </div>
+    <?php
+    include_once("footer.php");
+    ?>
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/sidebarmenu.js"></script>
@@ -286,17 +288,17 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
     <script src="../assets/js/jquery.dataTables.js"></script>
 
     <script>
-        // Sự kiện khi cửa sổ modal được ẩn đi
+        
         $('#magazineModal').on('hide.bs.modal', function() {
-            // Xóa nội dung của các ô input trong biểu mẫu
+            
             $('#magazineForm').trigger('reset');
             $('#magazineModalLabel').text('Add New Magazine');
             $('#magazineId').val('');
         });
 
-        // Sự kiện khi nhấp vào nút "Edit"
+        
         $('.btn-edit').click(function() {
-            // Lấy thông tin của tạp chí từ các thuộc tính data
+            
             var magazineId = $(this).data('magazine-id');
             var magazineName = $(this).data('magazine-name');
             var magazineDescription = $(this).data('magazine-description');
@@ -304,7 +306,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
             var closureDate = $(this).data('closure-date');
             var finalClosureDate = $(this).data('final-closure-date');
 
-            // Đưa thông tin của tạp chí vào các trường input trong cửa sổ modal
+            
             $('#magazineId').val(magazineId);
             $('#magazineName').val(magazineName);
             $('#magazineDescription').val(magazineDescription);
@@ -312,44 +314,43 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
             $('#datepicker1').val(closureDate);
             $('#datepicker2').val(finalClosureDate);
 
-            // Đổi tiêu đề của cửa sổ modal thành "Edit Magazine"
+          
             $('#magazineModalLabel').text('Edit Magazine');
 
-            // Mở cửa sổ modal
+           
             $('#magazineModal').modal('show');
         });
 
 
-        // Sự kiện khi nhấp vào nút "Add"
+        
         $('#addMagazine').click(function() {
-            // Xóa nội dung của các ô input trong biểu mẫu
+            
             $('#magazineForm').trigger('reset');
 
-            // Đổi tiêu đề của cửa sổ modal thành "Add New Magazine"
+            
             $('#magazineModalLabel').text('Add New Magazine');
 
-            // Mở cửa sổ modal
+           
             $('#magazineModal').modal('show');
         });
 
-        // Sự kiện khi người dùng nhấp vào nút "Save"
+      
         $('#saveMagazine').click(function() {
-            // Lấy dữ liệu từ biểu mẫu
+            
             var formData = $('#magazineForm').serialize();
 
-            // Gửi yêu cầu AJAX để thêm hoặc cập nhật tạp chí
+            
             $.ajax({
-                url: '../../Backend/save_magazine.php', // Thay thế đường dẫn bằng tên tệp xử lý
+                url: '../../Backend/save_magazine.php', 
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Xử lý phản hồi từ máy chủ nếu cần
+                    
                     console.log(response);
 
-                    // Sau khi thêm hoặc cập nhật thành công, đóng cửa sổ modal
                     $('#magazineModal').modal('hide');
 
-                    // Sau đó, làm mới trang để cập nhật danh sách tạp chí
+                    
                     window.location.reload();
                 },
                 error: function(xhr, status, error) {
@@ -359,46 +360,48 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
         });
 
         $('.btn-delete').click(function() {
-    // Lấy ID của tạp chí cần xóa
-    var magazineId = $(this).data('magazine-id');
+            
+            var magazineId = $(this).data('magazine-id');
 
-    // Hiển thị cảnh báo xác nhận xóa
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'You won\'t be able to revert this!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Gửi yêu cầu AJAX để xóa tạp chí
-            $.ajax({
-                url: '../../Backend/delete_magazine.php',
-                type: 'POST',
-                data: { magazineId: magazineId },
-                success: function(response) {
-                    // Xử lý phản hồi từ máy chủ nếu cần
-                    console.log(response);
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                   
+                    $.ajax({
+                        url: '../../Backend/delete_magazine.php',
+                        type: 'POST',
+                        data: {
+                            magazineId: magazineId
+                        },
+                        success: function(response) {
+                       
+                            console.log(response);
 
-                    // Hiển thị thông báo xóa thành công
-                    Swal.fire(
-                        'Deleted!',
-                        'Magazine has been deleted.',
-                        'success'
-                    ).then((result) => {
-                        // Sau khi xóa thành công, làm mới trang để cập nhật danh sách tạp chí
-                        window.location.reload();
+                            
+                            Swal.fire(
+                                'Deleted!',
+                                'Magazine has been deleted.',
+                                'success'
+                            ).then((result) => {
+                                
+                                window.location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                        }
                     });
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
                 }
             });
-        }
-    });
-});
+        });
     </script>
 </body>
 

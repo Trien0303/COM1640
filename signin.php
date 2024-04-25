@@ -14,6 +14,7 @@
 <body>
 	<?php
 	include_once("./connect.php");
+	include_once("./send_mail.php");
 	session_start();
 	if (isset($_POST['register'])) {
 		$username = $_POST['username'];
@@ -22,6 +23,12 @@
 		$facultyId = $_POST['faculty'];
 		$confirmPassword = $_POST['confirm_password'];
 		$email = $_POST['email'];
+
+		$send_email =$email;
+		$title = "New Student";
+    	$message = $username . "A student has registered a new account";
+		sendMail($email, $title, $message);
+
 
 		// Check if the username already exists
 		$check_username_query = "SELECT * FROM users WHERE username = '$username'";
@@ -141,8 +148,8 @@
 					echo "    title: 'Login successful!',";
 					echo "    showConfirmButton: false,";
 					echo "    timer: 1500";
-					echo "}).then(function() {"; // Thực hiện sau khi thông báo biến mất
-					echo "        window.location.href = './index.php';"; // Chuyển hướng
+					echo "}).then(function() {"; 
+					echo "        window.location.href = './index.php';"; 
 					echo "});";
 					echo "</script>";
 				} else {

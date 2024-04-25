@@ -192,7 +192,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           </div>
         </div>
       </div>
-
+      <?php
+            include_once("footer.php");
+            ?>
     </div>
   </div>
   <script src="../assets/libs/jquery/dist/jquery.min.js"></script>

@@ -59,7 +59,7 @@ if (isset($_POST['UpdateProfile'])) {
       $stmt = $conn->prepare($updateSql);
       $stmt->bind_param("ssss", $address, $name, $aboutYou, $username);
       if ($stmt->execute()) {
-        echo "<script>alert('Thông tin đã được cập nhật thành công')</script>";
+        echo "<script>alert('The information has been updated successfully')</script>";
         echo "<script>window.history.go(-1);</script>";
       } else {
         echo "Lỗi: " . $conn->error;
@@ -81,7 +81,7 @@ if (isset($_POST['changePassword'])) {
   $newPassword = $_POST['newPassword'];
   $repeatPassword = $_POST['repeatPassword'];
 
-  // Lấy mật khẩu đã băm của người dùng từ cơ sở dữ liệu
+
   $sql = "SELECT password FROM users WHERE username = '$username'";
   $result = $conn->query($sql);
 
@@ -89,15 +89,15 @@ if (isset($_POST['changePassword'])) {
     $row = $result->fetch_assoc();
     $hashedPassword = $row['password'];
 
-    // Kiểm tra mật khẩu hiện tại đã băm có khớp với mật khẩu trong cơ sở dữ liệu hay không
+
     if (password_verify($currentPassword, $hashedPassword)) {
-      // Kiểm tra xem mật khẩu mới và mật khẩu lặp lại có khớp nhau không
+
       if ($newPassword === $repeatPassword) {
-        // Băm mật khẩu mới trước khi cập nhật vào cơ sở dữ liệu
+
         $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $updateSql = "UPDATE users SET password='$hashedNewPassword' WHERE username='$username'";
         if ($conn->query($updateSql) === TRUE) {
-          echo "<script>alert('Thông tin đã được cập nhật thành công')</script>";
+          echo "<script>alert('The information has been updated successfully')</script>";
           echo "<script>window.history.go(-1);</script>";
         } else {
           echo "Lỗi: " . $conn->error;
@@ -694,7 +694,7 @@ if (isset($_POST['UpdateEmail'])) {
       function confirmLogout() {
         var confirmLogout = confirm("Are you sure you want to log out?");
         if (confirmLogout) {
-          window.location.href = '?page=logout'; // Chuyển hướng đến trang logout nếu người dùng đồng ý
+          window.location.href = '?page=logout'; 
         }
       }
       $("document").ready(function() {

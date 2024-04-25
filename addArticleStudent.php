@@ -43,7 +43,7 @@
     .glyphicon-plus:before {
         content: "\002b";
         color: #fff;
-        /* Màu của biểu tượng cộng */
+
     }
 
 
@@ -65,19 +65,19 @@
 
     .rounded-image {
         border-radius: 50%;
-        /* Tạo hình tròn */
+  
         overflow: hidden;
-        /* Đảm bảo hình ảnh không vượt ra khỏi khung hình tròn */
+    
         width: 200px;
-        /* Điều chỉnh kích thước của khung hình tròn */
+      
         height: 200px;
         border: 2px solid #ccc;
-        /* Thêm viền cho hình tròn */
+      
     }
 
     .rounded-image img {
         width: 100%;
-        /* Đảm bảo hình ảnh đầy đủ kích thước trong khung hình tròn */
+       
         height: auto;
     }
 </style>
