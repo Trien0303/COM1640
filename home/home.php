@@ -35,18 +35,30 @@
 </div>
 <div class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <?php
-        // Select article that public 
-        $spl_articles_approved = "SELECT * FROM `articles`
-            INNER JOIN users ON articles.authorId = users.userId
-            WHERE articles.showStatus = 1";
-        $result = $conn->query($spl_articles_approved);
+    <?php
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                ?>
+$username = $_SESSION['username']; 
+
+
+$user_query = "SELECT * FROM users WHERE username = '$username'";
+$user_result = $conn->query($user_query);
+
+if ($user_result->num_rows > 0) {
+    $user_row = $user_result->fetch_assoc();
+    $user_faculty_id = $user_row['facultyId'];
+
+    // Select article that public and belong to the user's faculty
+    $spl_articles_approved = "SELECT * FROM `articles`
+                            INNER JOIN users ON articles.authorId = users.userId
+                            WHERE articles.showStatus = 1 AND users.facultyId = $user_faculty_id";
+    $result = $conn->query($spl_articles_approved);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+?>      
+            <div class="card-header">
                 <div class="col">
-                    <div class="card h-100">
+                    <div class="card h-100 ">
                         <img src="<?= $row['image'] ?>" class="card-img-top" alt="<?= basename($row['image']) ?>">
                         <div class="card-body">
                             <h5 class="card-title">
@@ -61,8 +73,7 @@
                                 <?= $row['submitDate'] ?>
                             </small>
                             <form action="download.php" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="articlePublicId" id="articlePublicId"
-                                    value="<?= $row['articleId'] ?>">
+                                <input type="hidden" name="articlePublicId" id="articlePublicId" value="<?= $row['articleId'] ?>">
                                 <button type="submit" class="btn btn-primary btn-floating">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-download" viewBox="0 0 16 16">
@@ -76,13 +87,17 @@
                         </div>
                     </div>
                 </div>
-
-                <?php
-            }
-        } else {
-            echo "No data found!";
+            </div>
+<?php
         }
+    } else {
+        echo "No data found!";
+    }
+} else {
 
-        ?>
+    echo "No data of user.";
+}
+?>
+
     </div>
 </div>

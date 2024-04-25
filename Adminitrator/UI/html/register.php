@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       ?>
       <!--  Header End -->
 
-      <!--  Nội dung code từ đây xuống -->
+   
       <div class="container-fluid">
         <div class="card">
           <div class="card-body">
@@ -192,7 +192,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           </div>
         </div>
       </div>
-
+      <?php
+            include_once("footer.php");
+            ?>
     </div>
   </div>
   <script src="../assets/libs/jquery/dist/jquery.min.js"></script>

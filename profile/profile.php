@@ -18,15 +18,15 @@ if (isset($_POST['UpdateProfile'])) {
     $address = $_POST['address'];
     $aboutYou = $_POST['aboutYou'];
 
-    // Kiểm tra xem có tệp ảnh đã được tải lên không
+   
     if (isset($_FILES['avt']) && $_FILES['avt']['error'] !== UPLOAD_ERR_NO_FILE) {
       $file_name = $_FILES['avt']['name'];
       $file_tmp = $_FILES['avt']['tmp_name'];
-      $file_destination = "./uploads/" . $file_name; // Đường dẫn đến thư mục uploads
+      $file_destination = "./uploads/" . $file_name; 
 
-      // Di chuyển tệp ảnh tải lên vào thư mục 'uploads'
+     
       if (move_uploaded_file($file_tmp, $file_destination)) {
-        // Nếu di chuyển thành công, thực hiện cập nhật thông tin trong CSDL
+    
         $updateSql = "UPDATE users SET address=?, name=?, avatar=?, aboutYou=? WHERE username=?";
         $stmt = $conn->prepare($updateSql);
         $stmt->bind_param("sssss", $address, $name, $file_destination, $aboutYou, $username);
@@ -39,11 +39,11 @@ if (isset($_POST['UpdateProfile'])) {
           echo "</script>";
           echo "<script>window.history.go(-1);</script>";
         } else {
-          echo "Lỗi: " . $conn->error;
+          echo "error: " . $conn->error;
           echo "<script>window.history.go(-1);</script>";
         }
       } else {
-        // Nếu di chuyển không thành công, thông báo lỗi
+     
         echo "<script>alert('Error uploading image file')</script>";
         echo "<script>";
         echo "Swal.fire({";
@@ -54,20 +54,20 @@ if (isset($_POST['UpdateProfile'])) {
         echo "<script>window.history.go(-1);</script>";
       }
     } else {
-      // Nếu không có tệp ảnh được tải lên, chỉ thực hiện cập nhật thông tin trong CSDL
+      
       $updateSql = "UPDATE users SET address=?, name=?, aboutYou=? WHERE username=?";
       $stmt = $conn->prepare($updateSql);
       $stmt->bind_param("ssss", $address, $name, $aboutYou, $username);
       if ($stmt->execute()) {
-        echo "<script>alert('Thông tin đã được cập nhật thành công')</script>";
+        echo "<script>alert('The information has been updated successfully')</script>";
         echo "<script>window.history.go(-1);</script>";
       } else {
-        echo "Lỗi: " . $conn->error;
+        echo "Error: " . $conn->error;
         echo "<script>window.history.go(-1);</script>";
       }
     }
   } else {
-    echo "Lỗi: Tên người dùng không tồn tại trong phiên.";
+    echo "Error: Name of User don't alivable in session.";
     echo "<script>window.history.go(-1);</script>";
   }
 }
@@ -81,7 +81,7 @@ if (isset($_POST['changePassword'])) {
   $newPassword = $_POST['newPassword'];
   $repeatPassword = $_POST['repeatPassword'];
 
-  // Lấy mật khẩu đã băm của người dùng từ cơ sở dữ liệu
+
   $sql = "SELECT password FROM users WHERE username = '$username'";
   $result = $conn->query($sql);
 
@@ -89,15 +89,15 @@ if (isset($_POST['changePassword'])) {
     $row = $result->fetch_assoc();
     $hashedPassword = $row['password'];
 
-    // Kiểm tra mật khẩu hiện tại đã băm có khớp với mật khẩu trong cơ sở dữ liệu hay không
+
     if (password_verify($currentPassword, $hashedPassword)) {
-      // Kiểm tra xem mật khẩu mới và mật khẩu lặp lại có khớp nhau không
+
       if ($newPassword === $repeatPassword) {
-        // Băm mật khẩu mới trước khi cập nhật vào cơ sở dữ liệu
+
         $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $updateSql = "UPDATE users SET password='$hashedNewPassword' WHERE username='$username'";
         if ($conn->query($updateSql) === TRUE) {
-          echo "<script>alert('Thông tin đã được cập nhật thành công')</script>";
+          echo "<script>alert('The information has been updated successfully')</script>";
           echo "<script>window.history.go(-1);</script>";
         } else {
           echo "Lỗi: " . $conn->error;
@@ -209,7 +209,7 @@ if (isset($_POST['UpdateEmail'])) {
       }
       .tabordion input[name="sections"]:checked+label {
         border-right: 3px solid rgb(0, 128, 0);
-        /* Màu xanh */
+      
         color: rgb(0, 128, 0);
         font-weight: bold;
       }
@@ -379,10 +379,9 @@ if (isset($_POST['UpdateEmail'])) {
       .hvr-profile-img {
         position: relative;
         display: inline-block;
-        /* overflow: hidden;*/
-        /* Loại bỏ overflow: hidden */
+        
         overflow: visible;
-        /* Thêm overflow: visible */
+       
         opacity: .3;
       }
       .hvr-profile-img input[type=file] {
@@ -694,7 +693,7 @@ if (isset($_POST['UpdateEmail'])) {
       function confirmLogout() {
         var confirmLogout = confirm("Are you sure you want to log out?");
         if (confirmLogout) {
-          window.location.href = '?page=logout'; // Chuyển hướng đến trang logout nếu người dùng đồng ý
+          window.location.href = '?page=logout'; 
         }
       }
       $("document").ready(function() {

@@ -32,10 +32,16 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="../assets/assets_table/images/favicon.png" />
-
 </head>
 
 <body>
+    <style>
+        .content-wrapper {
+            overflow-y: auto;
+            max-height: calc(100vh - 150px);
+            /* Adjust the max height as needed */
+        }
+    </style>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar Start -->
@@ -68,64 +74,70 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
             include_once("header.php");
             ?>
             <!--  Header End -->
+            <br>
+            <br>
+            <br>
+            <br>
 
-            <?php
-            $sql = "SELECT f.facultyId, f.facultyName, COUNT(a.articleId) AS numArticles
+            <div class="content-wrapper">
+                <div class="container-fluid">
+                    <?php
+                    $sql = "SELECT f.facultyId, f.facultyName, COUNT(a.articleId) AS numArticles
             FROM faculties f
             LEFT JOIN users u ON f.facultyId = u.facultyId
             LEFT JOIN articles a ON u.userId = a.authorId
             GROUP BY f.facultyId, f.facultyName";
 
 
-            $result = $conn->query($sql);
+                    $result = $conn->query($sql);
 
-            $data = array();
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
-            }
+                    $data = array();
+                    while ($row = $result->fetch_assoc()) {
+                        $data[] = $row;
+                    }
 
-            $data_json = json_encode($data);
+                    $data_json = json_encode($data);
 
 
-            ?>
+                    ?>
 
-            <?php
-            $sqlMagazine = "SELECT m.magazineId, m.magazineName, COUNT(a.articleId) AS numArticles
+                    <?php
+                    $sqlMagazine = "SELECT m.magazineId, m.magazineName, COUNT(a.articleId) AS numArticles
         FROM magazine m
         LEFT JOIN articles a ON m.magazineId = a.magazineId
         GROUP BY m.magazineId, m.magazineName";
 
-            $resultMagazine = $conn->query($sqlMagazine);
+                    $resultMagazine = $conn->query($sqlMagazine);
 
-            $magazineData = array();
-            while ($rowMagazine = $resultMagazine->fetch_assoc()) {
-                $magazineData[] = $rowMagazine;
-            }
-            ?>
-            <?php
-            // Khởi tạo mảng để lưu số lượng bài báo theo từng năm
-            $articlesByYear = array();
+                    $magazineData = array();
+                    while ($rowMagazine = $resultMagazine->fetch_assoc()) {
+                        $magazineData[] = $rowMagazine;
+                    }
+                    ?>
+                    <?php
+              
+                    $articlesByYear = array();
 
-            // Lấy dữ liệu từ bảng articles và trích xuất năm từ cột submitDate
-            $sqlByYear = "SELECT YEAR(submitDate) AS submitYear, COUNT(*) AS numArticles
+                 
+                    $sqlByYear = "SELECT YEAR(submitDate) AS submitYear, COUNT(*) AS numArticles
               FROM articles
               GROUP BY YEAR(submitDate)
               ORDER BY submitYear";
-            $resultByYear = $conn->query($sqlByYear);
+                    $resultByYear = $conn->query($sqlByYear);
 
-            // Lặp qua kết quả và đếm số lượng bài báo theo từng năm
-            while ($rowByYear = $resultByYear->fetch_assoc()) {
-                $submitYear = $rowByYear['submitYear']; // Lấy năm từ cột submitYear
-                $articlesByYear[$submitYear] = $rowByYear['numArticles']; // Lưu số lượng bài báo cho từng năm
-            }
+                
+                    while ($rowByYear = $resultByYear->fetch_assoc()) {
+                        $submitYear = $rowByYear['submitYear']; 
+                        $articlesByYear[$submitYear] = $rowByYear['numArticles']; 
+                    }
 
-            // Chuyển mảng kết quả thành JSON để sử dụng trong mã JavaScript
-            $articlesByYearJSON = json_encode($articlesByYear);
-            ?>
+                    
+                    $articlesByYearJSON = json_encode($articlesByYear);
+                    ?>
 
-            <?php
-            // Truy vấn CSDL
-            $sqlfaculties = "SELECT f.facultyName,
+                    <?php
+                    
+                    $sqlfaculties = "SELECT f.facultyName,
                SUM(CASE WHEN a.status = 1 THEN 1 ELSE 0 END) AS numActivatedArticles,
                SUM(CASE WHEN a.status = 2 THEN 1 ELSE 0 END) AS numInactivatedArticles,
                SUM(CASE WHEN a.status = 0 THEN 1 ELSE 0 END) AS numPendingArticles
@@ -134,32 +146,32 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
         LEFT JOIN articles a ON u.userId = a.authorId
         GROUP BY f.facultyName";
 
-            $resultfaculties = $conn->query($sqlfaculties);
+                    $resultfaculties = $conn->query($sqlfaculties);
 
-            // Xử lý kết quả
-            $datafaculties = array();
-            while ($rowfaculties = $resultfaculties->fetch_assoc()) {
-                $datafaculties[] = $rowfaculties;
-            }
+                
+                    $datafaculties = array();
+                    while ($rowfaculties = $resultfaculties->fetch_assoc()) {
+                        $datafaculties[] = $rowfaculties;
+                    }
 
-            // Chuyển đổi dữ liệu thành định dạng dùng cho biểu đồ
-            $facultyNames = [];
-            $numActivatedArticles = [];
-            $numInactivatedArticles = [];
-            $numPendingArticles = [];
+                    
+                    $facultyNames = [];
+                    $numActivatedArticles = [];
+                    $numInactivatedArticles = [];
+                    $numPendingArticles = [];
 
-            foreach ($datafaculties as $rowfaculties) {
-                $facultyNames[] = $rowfaculties['facultyName'];
-                $numActivatedArticles[] = $rowfaculties['numActivatedArticles'];
-                $numInactivatedArticles[] = $rowfaculties['numInactivatedArticles'];
-                $numPendingArticles[] = $rowfaculties['numPendingArticles'];
-            }
-            ?>
+                    foreach ($datafaculties as $rowfaculties) {
+                        $facultyNames[] = $rowfaculties['facultyName'];
+                        $numActivatedArticles[] = $rowfaculties['numActivatedArticles'];
+                        $numInactivatedArticles[] = $rowfaculties['numInactivatedArticles'];
+                        $numPendingArticles[] = $rowfaculties['numPendingArticles'];
+                    }
+                    ?>
 
 
-            <?php
-            // Truy vấn CSDL để lấy số lượng bài báo được duyệt và từ chối cho từng tạp chí
-            $sqlMagazineApprovalRatio = "SELECT m.magazineName,
+                    <?php
+                   
+                    $sqlMagazineApprovalRatio = "SELECT m.magazineName,
                                     SUM(CASE WHEN a.status = 1 THEN 1 ELSE 0 END) AS approvedArticles,
                                     SUM(CASE WHEN a.status = 2 THEN 1 ELSE 0 END) AS rejectedArticles,
                                     COUNT(a.articleId) AS totalArticles
@@ -167,90 +179,64 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
                                 LEFT JOIN articles a ON m.magazineId = a.magazineId
                                 GROUP BY m.magazineId, m.magazineName";
 
-            $resultMagazineApprovalRatio = $conn->query($sqlMagazineApprovalRatio);
+                    $resultMagazineApprovalRatio = $conn->query($sqlMagazineApprovalRatio);
 
-            // Xử lý kết quả
-            $approvalRatioData = array();
-            while ($rowMagazineApprovalRatio = $resultMagazineApprovalRatio->fetch_assoc()) {
-                $magazineName = $rowMagazineApprovalRatio['magazineName'];
-                $approvedArticles = $rowMagazineApprovalRatio['approvedArticles'];
-                $rejectedArticles = $rowMagazineApprovalRatio['rejectedArticles'];
-                $totalArticles = $rowMagazineApprovalRatio['totalArticles'];
+        
+                    $approvalRatioData = array();
+                    while ($rowMagazineApprovalRatio = $resultMagazineApprovalRatio->fetch_assoc()) {
+                        $magazineName = $rowMagazineApprovalRatio['magazineName'];
+                        $approvedArticles = $rowMagazineApprovalRatio['approvedArticles'];
+                        $rejectedArticles = $rowMagazineApprovalRatio['rejectedArticles'];
+                        $totalArticles = $rowMagazineApprovalRatio['totalArticles'];
 
-                // Tính tỷ lệ duyệt và từ chối
-                $approvalRatio = $totalArticles > 0 ? round(($approvedArticles / $totalArticles) * 100, 2) : 0;
-                $rejectionRatio = $totalArticles > 0 ? round(($rejectedArticles / $totalArticles) * 100, 2) : 0;
+                      
+                        $approvalRatio = $totalArticles > 0 ? round(($approvedArticles / $totalArticles) * 100, 2) : 0;
+                        $rejectionRatio = $totalArticles > 0 ? round(($rejectedArticles / $totalArticles) * 100, 2) : 0;
 
-                // Lưu dữ liệu vào mảng
-                $approvalRatioData[] = array(
-                    'magazineName' => $magazineName,
-                    'approvalRatio' => $approvalRatio,
-                    'rejectionRatio' => $rejectionRatio
-                );
-            }
-            ?>
+                        
+                        $approvalRatioData[] = array(
+                            'magazineName' => $magazineName,
+                            'approvalRatio' => $approvalRatio,
+                            'rejectionRatio' => $rejectionRatio
+                        );
+                    }
+                    ?>
 
-            <div class="container-fluid">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- First column for Magazine -->
-                            <div class="col-lg-6 d-flex align-items-stretch">
-                                <div class="card w-100">
-                                    <div class="card-body p-4 text-center">
-                                        <h5 class="card-title fw-semibold mb-4">Number of Articles by Magazine</h5>
-                                        <div class="chart-container" style="position: relative; height: 400px;">
-                                            <canvas id="magazineChart"></canvas>
+                    <div class="container-fluid">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+
+                                    <div class="row">
+                                        <div class="col-lg-12 d-flex align-items-stretch">
+                                            <div class="card w-100">
+                                                <div class="card-body p-4 text-center">
+                                                    <h5 class="card-title fw-semibold mb-4">Number of Articles by Year</h5>
+                                                    <div class="chart-container" style="position: relative; height: 400px;">
+                                                        <canvas id="yearChart"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Second column for Faculty -->
-                            <div class="col-lg-6 d-flex align-items-stretch">
-                                <div class="card w-100">
-                                    <div class="card-body p-4">
-                                        <h5 class="card-title fw-semibold mb-4 text-center">Number of Articles by Faculty</h5>
-                                        <div class="chart-container" style="position: relative; height: 400px;">
-                                            <canvas id="articleChart"></canvas>
+                                    <div class="col-lg-6 d-flex align-items-stretch">
+                                        <div class="card w-100">
+                                            <div class="card-body p-4 text-center">
+                                                <h5 class="card-title fw-semibold mb-4">Number of Articles by Magazine</h5>
+                                                <div class="chart-container" style="position: relative; height: 400px;">
+                                                    <canvas id="magazineChart"></canvas>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- New row for Year -->
-                        <div class="row">
-                            <div class="col-lg-12 d-flex align-items-stretch">
-                                <div class="card w-100">
-                                    <div class="card-body p-4 text-center">
-                                        <h5 class="card-title fw-semibold mb-4">Number of Articles by Year</h5>
-                                        <div class="chart-container" style="position: relative; height: 400px;">
-                                            <canvas id="yearChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 d-flex align-items-stretch">
-                                <div class="card w-100">
-                                    <div class="card-body p-4 text-center">
-                                        <h5 class="card-title fw-semibold mb-4">Faculty Articles Chart</h5>
-                                        <div class="chart-container" style="position: relative; height: 400px;">
-                                            <canvas id="facultyChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 d-flex align-items-stretch">
-                                <div class="card w-100">
-                                    <div class="card-body p-4 text-center">
-                                        <h5 class="card-title fw-semibold mb-4">Magazine Approval Ratio</h5>
-                                        <div class="chart-container" style="position: relative; height: 400px;">
-                                            <canvas id="approvalRatioChart"></canvas>
+                                    <div class="col-lg-6 d-flex align-items-stretch">
+                                        <div class="card w-100">
+                                            <div class="card-body p-4">
+                                                <h5 class="card-title fw-semibold mb-4 text-center">Number of Articles by Faculty</h5>
+                                                <div class="chart-container" style="position: relative; height: 400px;">
+                                                    <canvas id="articleChart"></canvas>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -259,7 +245,9 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
                     </div>
                 </div>
             </div>
-
+            <?php
+            include_once("footer.php");
+            ?>
 
 
         </div>
@@ -296,33 +284,33 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
 
     <script>
-        // Lấy dữ liệu từ PHP và chuyển thành JavaScript object
+        
         var data = <?php echo json_encode($data); ?>;
 
-        // Tạo mảng chứa tên khoa và số lượng bài báo cáo
+      
         var facultyNames = [];
         var numArticles = [];
 
-        // Đổ dữ liệu từ PHP vào mảng JavaScript
+        
         data.forEach(function(item) {
-            facultyNames.push(item.facultyName); // Lấy tên khoa và thêm vào mảng
-            numArticles.push(item.numArticles); // Lấy số lượng bài báo cáo và thêm vào mảng
+            facultyNames.push(item.facultyName); 
+            numArticles.push(item.numArticles); 
         });
 
-        // Mảng màu cho các cột
+ 
         var colors = ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)', 'rgba(255, 159, 64, 0.5)'];
 
-        // Vẽ biểu đồ tròn
+
         var ctx = document.getElementById('articleChart').getContext('2d');
         var myChart = new Chart(ctx, {
-            type: 'pie', // Loại biểu đồ tròn
+            type: 'pie', 
             data: {
-                labels: facultyNames, // Tên của các khoa
+                labels: facultyNames, 
                 datasets: [{
-                    label: 'Number of Articles', // Chú thích cho dữ liệu biểu đồ
-                    data: numArticles, // Số lượng bài báo cáo cho từng khoa
-                    backgroundColor: colors, // Mảng màu cho các cột
-                    borderColor: colors.map(color => color.replace('0.5', '1')), // Viền của các cột
+                    label: 'Number of Articles', 
+                    data: numArticles, 
+                    backgroundColor: colors,
+                    borderColor: colors.map(color => color.replace('0.5', '1')), 
                     borderWidth: 1
                 }]
             },
@@ -399,13 +387,13 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
 
         var ctx = document.getElementById('yearChart').getContext('2d');
         var myChart = new Chart(ctx, {
-            type: 'bar', // Sửa loại biểu đồ thành 'bar' để hiển thị cột
+            type: 'bar', 
             data: {
                 labels: years,
                 datasets: [{
                     label: 'Number of Articles',
                     data: numArticles,
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)', // Màu nền cho các cột
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)', 
                     borderColor: 'rgb(75, 192, 192)',
                     borderWidth: 1
                 }]
@@ -451,45 +439,45 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR, ROLE_UNIVERSITY_MARKETING_M
     </script>
 
     <script>
-        // Lấy dữ liệu PHP và chuyển thành JavaScript object
+        
         var approvalRatioData = <?php echo json_encode($approvalRatioData); ?>;
 
-        // Tạo mảng chứa tên tạp chí và tỷ lệ duyệt, từ chối
+       
         var magazineNames = [];
         var approvalRatios = [];
         var rejectionRatios = [];
 
-        // Đổ dữ liệu từ PHP vào mảng JavaScript
+        
         approvalRatioData.forEach(function(item) {
-            magazineNames.push(item.magazineName); // Lấy tên tạp chí và thêm vào mảng
-            approvalRatios.push(item.approvalRatio); // Lấy tỷ lệ duyệt và thêm vào mảng
-            rejectionRatios.push(item.rejectionRatio); // Lấy tỷ lệ từ chối và thêm vào mảng
+            magazineNames.push(item.magazineName);
+            approvalRatios.push(item.approvalRatio); 
+            rejectionRatios.push(item.rejectionRatio);
         });
 
-        // Vẽ biểu đồ cột
+      
         var ctx = document.getElementById('approvalRatioChart').getContext('2d');
         var myChart = new Chart(ctx, {
-            type: 'bar', // Loại biểu đồ cột
+            type: 'bar', 
             data: {
-                labels: magazineNames, // Tên của các tạp chí
+                labels: magazineNames, 
                 datasets: [{
-                    label: 'Approval Ratio (%)', // Chú thích cho dữ liệu tỷ lệ duyệt
-                    data: approvalRatios, // Tỷ lệ duyệt
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Màu nền cho cột tỷ lệ duyệt
-                    borderColor: 'rgba(54, 162, 235, 1)', // Màu viền cho cột tỷ lệ duyệt
+                    label: 'Approval Ratio (%)', 
+                    data: approvalRatios, 
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', 
+                    borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 }, {
-                    label: 'Rejection Ratio (%)', // Chú thích cho dữ liệu tỷ lệ từ chối
-                    data: rejectionRatios, // Tỷ lệ từ chối
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)', // Màu nền cho cột tỷ lệ từ chối
-                    borderColor: 'rgba(255, 99, 132, 1)', // Màu viền cho cột tỷ lệ từ chối
+                    label: 'Rejection Ratio (%)', 
+                    data: rejectionRatios, 
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)', 
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
                 }]
             },
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true // Bắt đầu trục y từ giá trị 0
+                        beginAtZero: true 
                     }
                 }
             }

@@ -4,7 +4,9 @@ include_once('../../../connect.php');
 require_once '../../../permissions.php';
 
 checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
+$userRole = getUserRole($conn);
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -131,7 +133,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
 
 
             <?php
-            // Truy vấn SQL để lấy dữ liệu từ bảng articles
+       
             $userId = $_SESSION['userid'];
             $sql = "SELECT a.*, u.facultyId AS authorFacultyId, f.facultyName AS authorFacultyName
         FROM articles a
@@ -141,7 +143,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                // Bắt đầu bảng HTML
+               
                 echo '<div class="container-fluid">';
                 echo '<div class="card">';
                 echo '<div class="card-body">';
@@ -149,7 +151,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                 echo '<div class="col-lg-12 d-flex align-items-stretch">';
                 echo '<div class="card w-100">';
                 echo '<div class="card-body p-4">';
-                echo '<h5 class="card-title fw-semibold mb-4">Accounts of System</h5>';
+                echo '<h5 class="card-title fw-semibold mb-4">Article</h5>';
                 echo '<br>';
                 echo '<div class="table-responsive">';
                 echo '<table id="dataTableExample" class="table text-nowrap mb-0 align-middle">';
@@ -170,20 +172,20 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                 echo '</thead>';
                 echo '<tbody>';
 
-                // Duyệt qua các dòng kết quả và hiển thị dữ liệu
+                
                 while ($row = $result->fetch_assoc()) {
-                    $submitDate = strtotime($row["submitDate"]); // Chuyển đổi ngày nộp thành timestamp
-                    $deadline = strtotime('tomorrow', strtotime('+14 days', $submitDate)) - 1; // Lấy thời gian 23:59 của ngày cuối cùng
-                    $currentDate = time(); // Lấy timestamp của ngày hiện tại
-                    $remainingTime = $deadline - $currentDate; // Tính thời gian còn lại đến hạn feedback
+                    $submitDate = strtotime($row["submitDate"]); 
+                    $deadline = strtotime('tomorrow', strtotime('+14 days', $submitDate)) - 1; 
+                    $currentDate = time(); 
+                    $remainingTime = $deadline - $currentDate; 
 
-                    // Tính số ngày, giờ và phút còn lại
+            
                     $remainingDays = floor($remainingTime / (60 * 60 * 24));
                     $remainingHours = floor(($remainingTime % (60 * 60 * 24)) / (60 * 60));
                     $remainingMinutes = floor(($remainingTime % (60 * 60)) / 60);
 
                     $remainingResult =  "$remainingDays" . ' days ' . "$remainingHours" . ' hours ' . "$remainingMinutes" . ' minutes left';
-                    // Xác định màu sắc dựa trên số ngày còn lại
+                    
                     if ($remainingDays > 5) {
                         $colorClass = 'bg-primary';
                         $colorButton = 'btn-primary';
@@ -205,24 +207,24 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                     echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-1">' . $row["title"] . '</h6></td>';
                     echo '<td class="border-bottom-0"><h6 class="fw-normal">' . $row["content"] . '</h6></td>';
                     echo '<td class="border-bottom-0"><p class="mb-0 fw-normal">' . $row["submitDate"] . '</p></td>';
-                    echo '<td class="border-bottom-0"><div class="d-flex align-items-center gap-2"><span class="badge ' . $colorClass . ' rounded-3 fw-semibold style="background-color:red;"">' . $remainingResult . ' </span></div></td>';
-                    // echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-0 fs-4">' . $row["authorId"] . '</h6></td>';
-                    // echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-0 fs-4">' . $row["magazineId"] . '</h6></td>';
-                    // echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-0 fs-4">' . $row["Image"] . '</h6></td>';
 
-                    // echo '<td class="border-bottom-0"><div class="d-flex align-items-center gap-2"><span class="badge bg-primary rounded-3 fw-semibold">' . $row["status"] . '</span></div></td>';
-            ?>
+
+                    echo '<td class="border-bottom-0"><div class="d-flex align-items-center gap-2" ><span class="badge ' . $colorClass . ' rounded-3 fw-semibold style="background-color:red;"">' . $remainingResult . ' </span></div></td>';
+            ?>  
                     <td class="border-bottom-0 <?php echo ($row['showStatus'] == 1) ? 'no-click' : ''; ?>">
-                        <div class="d-flex align-items-center gap-2">
-                            <label class="switch" onclick="toggleStatus(this, <?php echo $row['articleId']; ?>)">
-                                <input type="hidden" name="status<?php echo $row['articleId']; ?>" value="<?php echo $row['status']; ?>">
-                                <span class="slider <?php echo ($row["status"] == 1) ? 'active' : (($row["status"] == 0) ? 'pending' : 'inactive'); ?>">
-                                    <?php echo ($row["status"] == 1) ? 'ACTIVE' : (($row["status"] == 0) ? 'PENDING' : 'INACTIVE'); ?>
-                                </span>
-                            </label>
-                        </div>
-                    </td>
-
+    <div class="d-flex align-items-center gap-2">
+        <?php if ($userRole === ROLE_ADMIN): ?>
+            <label class="switch" onclick="toggleStatus(this, <?php echo $row['articleId']; ?>)" disabled>
+        <?php else: ?>
+            <label class="switch" onclick="toggleStatus(this, <?php echo $row['articleId']; ?>)">
+        <?php endif; ?>
+            <input type="hidden" name="status<?php echo $row['articleId']; ?>" value="<?php echo $row['status']; ?>">
+            <span class="slider <?php echo ($row["status"] == 1) ? 'active' : (($row["status"] == 0) ? 'pending' : 'inactive'); ?>">
+                <?php echo ($row["status"] == 1) ? 'ACTIVE' : (($row["status"] == 0) ? 'PENDING' : 'INACTIVE'); ?>
+            </span>
+        </label>
+    </div>
+</td>
 
 
             <?php
@@ -235,7 +237,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                                         </td>';
                     echo '</tr>';
                 }
-                // Kết thúc bảng HTML
+              
                 echo '</tbody>';
                 echo '</table>';
                 echo '</div>';
@@ -247,7 +249,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                 echo '</div>';
                 echo '</div>';
             } else {
-                echo "Không có dữ liệu.";
+                echo "No Data";
             }
 
             ?>
@@ -262,7 +264,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="detailsModalBody">
-                    <!-- Nội dung của thông tin chi tiết sẽ được điền vào đây -->
+                  
                     <h6 class="modal-title">Comments</h6>
                     <table class="table">
                         <thead>
@@ -274,12 +276,12 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                             </tr>
                         </thead>
                         <tbody id="commentTableBody">
-                            <!-- Dữ liệu bình luận sẽ được thêm vào đây -->
+                            
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -309,6 +311,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
             </div>
         </div>
     </div>
+
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/sidebarmenu.js"></script>
@@ -320,53 +323,54 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
     <script src="../assets/js/jquery.dataTables.js"></script>
 
     <script>
-        function toggleStatus(label, articleId) {
-            var hiddenInput = label.querySelector('input[type="hidden"]');
-            var slider = label.querySelector('.slider');
+      
+            function toggleStatus(label, articleId) {
+                var hiddenInput = label.querySelector('input[type="hidden"]');
+                var slider = label.querySelector('.slider');
 
-            var status = parseInt(hiddenInput.value);
+                var status = parseInt(hiddenInput.value);
 
-            if (status === 0) {
-                status = 1;
-                slider.innerText = "ACTIVE"; // Thay đổi văn bản cho trạng thái active
-            } else if (status === 1) {
-                status = 2;
-                slider.innerText = "INACTIVE"; // Thay đổi văn bản cho trạng thái inactive
-            } else {
-                status = 0;
-                slider.innerText = "PENDING"; // Thay đổi văn bản cho trạng thái pending
-            }
-
-            hiddenInput.value = status;
-
-            slider.classList.remove('active', 'pending', 'inactive');
-            if (status === 0) {
-                slider.classList.add('pending');
-            } else if (status === 1) {
-                slider.classList.add('active');
-            } else {
-                slider.classList.add('inactive');
-            }
-
-            // Gửi yêu cầu AJAX để cập nhật trạng thái trong cơ sở dữ liệu
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "../../Backend/update_status.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Xử lý phản hồi từ máy chủ nếu cần
-                    console.log(xhr.responseText);
-
+                if (status === 0) {
+                    status = 1;
+                    slider.innerText = "ACTIVE"; 
+                } else if (status === 1) {
+                    status = 2;
+                    slider.innerText = "INACTIVE"; 
+                } else {
+                    status = 0;
+                    slider.innerText = "PENDING";
                 }
-            };
-            xhr.send("articleId=" + articleId + "&status=" + status);
-        }
 
+                hiddenInput.value = status;
 
+                slider.classList.remove('active', 'pending', 'inactive');
+                if (status === 0) {
+                    slider.classList.add('pending');
+                } else if (status === 1) {
+                    slider.classList.add('active');
+                } else {
+                    slider.classList.add('inactive');
+                }
 
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "../../Backend/update_status.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                       
+                        console.log(xhr.responseText);
+
+                    }
+                };
+                xhr.send("articleId=" + articleId + "&status=" + status);
+            }
+    
+    </script>
+    <script>
         $(document).ready(function() {
             function viewDetails(articleId) {
-                // Gửi yêu cầu Ajax để lấy thông tin chi tiết của bài viết
+                
                 $.ajax({
                     url: '../../Backend/get_articles_detail.php',
                     type: 'GET',
@@ -384,7 +388,7 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                 });
             }
 
-            // Sử dụng sự kiện 'click' cho nút xem chi tiết
+          
             $('.btn-view-details').click(function() {
                 var articleId = $(this).data('article-id');
                 viewDetails(articleId);
@@ -393,49 +397,47 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
 
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Lắng nghe sự kiện khi nhấn nút comment hoặc nút edit comment
+            
             $('.btn-comment, .btn-edit-comment').click(function() {
                 var articleId = $(this).data('article-id');
                 var action = $(this).data('action');
                 console.log('Action:', action);
                 if (action === 'edit') {
-                    // Nếu là nút edit comment, hiển thị modal chỉ để sửa comment
-                    var commentId = $(this).data('comment-id'); // Lấy ID của comment cần chỉnh sửa
+                   
+                    var commentId = $(this).data('comment-id'); 
                     var commentContent = $(this).data(
-                        'comment-content'); // Lấy nội dung của comment cần chỉnh sửa
-
-                    // Đặt giá trị cho form comment modal để sửa comment
+                        'comment-content'); 
+                    
                     $('#articleId').val(articleId);
                     $('#commentText').val(commentContent);
                     $('#commentModal .modal-title').text('Edit Comment');
-                    $('#submitComment').text('Save'); // Đổi nút "Submit" thành "Save"
-                    $('#commentModal').modal('show'); // Hiển thị modal form comment để chỉnh sửa comment
+                    $('#submitComment').text('Save'); 
+                    $('#commentModal').modal('show'); 
                 } else {
-                    // Nếu không phải là nút edit comment, hiển thị modal comment để thêm mới
+                   
                     $('#articleId').val(
-                        articleId); // Đặt giá trị articleId cho trường ẩn trong form comment
-                    $('#commentText').val(''); // Đặt giá trị mặc định cho trường commentText là rỗng
+                        articleId); 
+                    $('#commentText').val(''); 
                     $('#commentModal .modal-title').text('Add Comment');
-                    $('#submitComment').text('Submit'); // Đổi nút "Save" thành "Submit"
-                    $('#commentModal').modal('show'); // Hiển thị modal form comment để thêm mới comment
+                    $('#submitComment').text('Submit');
+                    $('#commentModal').modal('show'); 
                 }
             });
 
-            // Lắng nghe sự kiện khi gửi comment
             $('#submitComment').click(function() {
-                var formData = $('#commentForm').serialize(); // Lấy dữ liệu từ form comment
+                var formData = $('#commentForm').serialize(); 
                 $.ajax({
-                    url: '../../Backend/process_comment.php', // Script PHP để xử lý comment
+                    url: '../../Backend/process_comment.php', 
                     type: 'POST',
                     data: formData,
                     success: function(response) {
-                        // Hiển thị thông báo SweetAlert2 với nội dung là response
+                        
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
                             text: response,
                         }).then((result) => {
-                            // Nếu người dùng nhấn OK, ẩn modal và làm sạch form
+                           
                             if (result.isConfirmed) {
                                 $('#commentModal').modal('hide');
                                 $('#commentForm')[0].reset();
@@ -446,9 +448,9 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
                 });
             });
 
-            // Lắng nghe sự kiện khi đóng modal
+            
             $('#commentModal').on('hidden.bs.modal', function() {
-                $('#commentForm')[0].reset(); // Xóa các giá trị trong form comment khi đóng modal
+                $('#commentForm')[0].reset(); 
                 $('#commentId').val('');
                 $('#articleId').val('');
             });
@@ -465,8 +467,6 @@ checkAccess([ROLE_ADMIN, ROLE_MARKETING_COORDINATOR], $conn);
             });
         }
     </script>
-
-
     </script>
 
 </body>

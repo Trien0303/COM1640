@@ -15,19 +15,15 @@ checkAccess([ROLE_ADMIN], $conn);
     <title>Faculty Management</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
-    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap5.css">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="
-https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js
-"></script>
-<link href="
-https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
-" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
         .switch {
             position: relative;
@@ -127,12 +123,12 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
 
 
             <?php
-            // Truy vấn SQL để lấy dữ liệu từ bảng facultys
+            
             $sql = "SELECT * FROM faculties";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                // Bắt đầu bảng HTML
+                
                 echo '<div class="container-fluid">';
                 echo '<div class="card">';
                 echo '<div class="card-body">';
@@ -156,7 +152,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                 echo '</thead>';
                 echo '<tbody>';
 
-                // Duyệt qua các dòng kết quả và hiển thị dữ liệu
+               
                 while ($row = $result->fetch_assoc()) {
                     echo '<tr>';
                     echo '<td class="border-bottom-0"><h6 class="fw-semibold mb-0">' . $row["facultyId"] . '</h6></td>';
@@ -167,11 +163,12 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                         data-bs-target="#facultyModal" 
                         data-faculty-id="' . $row["facultyId"] . '" 
                         data-faculty-name="' . $row["facultyName"] . '" >Edit</button>';
-                    echo ' <button type="button" class="btn btn-warning btn-sm btn-delete" data-faculty-id="' . $row["facultyId"] . '">Delete</button>';
+                    echo ' <button type="button" class="btn btn-warning btn-sm btn-delete" 
+                    data-faculty-id="' . $row["facultyId"] . '">Delete</button>';
                     echo '</td>';
                     echo '</tr>';
                 }
-                // Kết thúc bảng HTML
+                
                 echo '</tbody>';
                 echo '</table>';
                 echo '</div>';
@@ -198,7 +195,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Form to add or edit faculty -->
+                    
                     <form id="facultyForm">
                         <div class="mb-3">
                             <label for="facultyName" class="form-label">Faculty Name</label>
@@ -214,7 +211,9 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
             </div>
         </div>
     </div>
-
+    <?php
+            include_once("footer.php");
+            ?>
 
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -227,68 +226,68 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
     <script src="../assets/js/jquery.dataTables.js"></script>
 
     <script>
-        // Sự kiện khi cửa sổ modal được ẩn đi
+        
         $('#facultyModal').on('hide.bs.modal', function() {
-            // Xóa nội dung của các ô input trong biểu mẫu
+            
             $('#facultyForm').trigger('reset');
-            // Đặt giá trị rỗng cho trường input facultyId
+            
             $('#facultyId').val('');
-            // Đặt lại tiêu đề modal
+            
             $('#facultyModalLabel').text('Add New Faculty');
         });
 
 
 
-        // Sự kiện khi nhấp vào nút "Edit"
+        
         $('.btn-edit').click(function() {
-            // Lấy thông tin của tạp chí từ các thuộc tính data
+           
             var facultyId = $(this).data('faculty-id');
             var facultyName = $(this).data('faculty-name');
 
-            // Đưa thông tin của tạp chí vào các trường input trong cửa sổ modal
+            
             $('#facultyId').val(facultyId);
             $('#facultyName').val(facultyName);
 
 
-            // Đổi tiêu đề của cửa sổ modal thành "Edit faculty"
+            
             $('#facultyModalLabel').text('Edit Faculty');
 
-            // Mở cửa sổ modal
+            
             $('#facultyModal').modal('show');
         });
 
 
-        // Sự kiện khi nhấp vào nút "Add"
+        
         $('#addFaculty').click(function() {
-            // Xóa nội dung của các ô input trong biểu mẫu
+            
             $('#facultyForm').trigger('reset');
-            //
+            
             $('#facultyModalLabel').butt('Add New Faculty');
-            // Đổi tiêu đề của cửa sổ modal thành "Add New faculty"
+            
             $('#facultyModalLabel').text('Add New Faculty');
 
-            // Mở cửa sổ modal
+            
             $('#facultyModal').modal('show');
         });
 
-        // Sự kiện khi người dùng nhấp vào nút "Save"
+       
         $('#saveFaculty').click(function() {
-            // Lấy dữ liệu từ biểu mẫu
+            
             var formData = $('#facultyForm').serialize();
 
-            // Gửi yêu cầu AJAX để thêm hoặc cập nhật tạp chí
+            
             $.ajax({
-                url: '../../Backend/save_faculty.php', // Thay thế đường dẫn bằng tên tệp xử lý
+                url: '../../Backend/save_faculty.php', 
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Xử lý phản hồi từ máy chủ nếu cần
+                    
                     console.log(response);
 
-                    // Sau khi thêm hoặc cập nhật thành công, đóng cửa sổ modal
+                    
                     $('#facultyModal').modal('hide');
 
-                    // Sau đó, làm mới trang để cập nhật danh sách tạp chí
+                    
                     window.location.reload();
                 },
                 error: function(xhr, status, error) {
@@ -297,12 +296,12 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css
             });
         });
         
-        // Sự kiện khi nhấp vào nút "Delete"
+        
 $('.btn-delete').click(function() {
-    // Lấy ID của khoa từ thuộc tính dữ liệu data-faculty-id
+    
     var facultyId = $(this).data('faculty-id');
 
-    // Hiển thị cửa sổ xác nhận xóa bằng SweetAlert2
+    
     Swal.fire({
         title: 'Are you sure?',
         text: 'You won\'t be able to revert this!',
@@ -313,22 +312,22 @@ $('.btn-delete').click(function() {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Gửi yêu cầu xóa tạp chí qua AJAX
+            
             $.ajax({
-                url: '../../Backend/delete_faculty.php', // Thay thế đường dẫn bằng tên tệp xử lý
+                url: '../../Backend/delete_faculty.php',
                 type: 'POST',
-                data: {faculty_id: facultyId}, // Gửi ID tạp chí cần xóa
+                data: {faculty_id: facultyId},
                 success: function(response) {
-                    // Xử lý phản hồi từ máy chủ nếu cần
+                   
                     console.log(response);
 
-                    // Hiển thị thông báo xóa thành công bằng SweetAlert2
+                    
                     Swal.fire(
                         'Deleted!',
                         'Faculty has been deleted.',
                         'success'
                     ).then((result) => {
-                        // Sau khi xóa thành công, làm mới trang để cập nhật danh sách tạp chí
+                        
                         window.location.reload();
                     });
                 },

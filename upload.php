@@ -1,6 +1,6 @@
 <?php
 include_once ("connect.php");
-require 'mail.php';
+require 'send_mail.php';
 session_start();
 
 // Define upload directory
@@ -35,22 +35,14 @@ function check_file($file_name, $file_tmp_name, $file_type, $file_size, $target_
         return false;
     }
 
-    // Check if file already exists
-    // if (file_exists($target_file)) {
-    //     echo "<script>alert('Sorry, file $file_name already exists.')</script>";
-    //     $uploadOk = false;
-    //     break;
-    // }
+    
 
     if ($file_size > 5000000) {
         echo "Sorry, your file " . $file_name . " is too large.";
         return false;
     }
 
-    // if (!move_uploaded_file($file_tmp_name, $target_dir . $file_name)) {
-    //     echo "Sorry, there was an error uploading your file.";
-    //     return false;
-    // }
+    
     return true;
 }
 
@@ -134,9 +126,9 @@ if (isset ($_POST["Submit"]) && !empty ($_FILES["files"]["name"][0])) {
     // Commit the transaction if all insertions were successful
     if ($uploadOk) {
         $conn->commit();
-        $message = 'There is a student submit an articles. Please check and feedback it!!!';
+        $message = 'Dear teachers, The system notifies teachers that the student has successfully submitted the assignment to the system. Teachers, please give comments and ratings within 14 days. After 14 days, teachers will not be able to comment.';
 
-        sendEmail($coordinator_email, $coordinator_name, $message, $multi_recipient, $coordinator);
+        sendMail($coordinator_email, $coordinator_name, $message, $multi_recipient, $coordinator);
 
         $_SESSION['return'] = "The article and file(s) have been uploaded successfully.";
         echo "<script>window.location.href = 'index.php?page=magazineStudent';</script>";

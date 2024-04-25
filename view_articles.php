@@ -8,23 +8,23 @@
     <style>
         .table th {
             background-color: #f2f2f2;
-            /* Màu nền */
+            
             color: #333;
-            /* Màu chữ */
+            
             font-weight: bold;
-            /* Độ đậm của chữ */
+            
             padding: 10px;
-            /* Khoảng cách giữa nội dung và viền */
+            
             text-align: center;
-            /* Căn giữa nội dung */
+            
         }
 
-        /* CSS cho các ô dữ liệu */
+       
         .table td {
             padding: 10px;
-            /* Khoảng cách giữa nội dung và viền */
+           
             text-align: left;
-            /* Căn trái nội dung */
+            
         }
     </style>
     <?php
@@ -165,7 +165,7 @@
 
 
         function deleteComment(commentId) {
-            // Hiển thị cửa sổ xác nhận bằng SweetAlert2
+            
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'You want to delete this comment!',
@@ -176,7 +176,7 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Nếu người dùng xác nhận xóa, thực hiện gửi yêu cầu xóa comment
+                    
                     $.ajax({
                         url: '../../Backend/delete_comment.php',
                         type: 'POST',
@@ -184,14 +184,14 @@
                             commentId: commentId
                         },
                         success: function(response) {
-                            // Xử lý phản hồi từ server nếu cần
+                            
                             console.log(response);
-                            // Tải lại trang để cập nhật danh sách comment
+                            
                             location.reload();
                         },
                         error: function(xhr, status, error) {
                             console.error(error);
-                            // Hiển thị thông báo lỗi nếu có lỗi xảy ra
+                            
                             Swal.fire({
                                 icon: 'error',
                                 title: 'ERROR',

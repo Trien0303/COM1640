@@ -1,8 +1,10 @@
 <?php
 
-include_once ("../../../connect.php");
-require_once '../../../permissions.php';
-checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
+include_once("../../../connect.php");
+require '../../../permissions.php';
+require '../../../download.php';
+
+checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER, ROLE_MARKETING_COORDINATOR], $conn);
 
 
 
@@ -89,8 +91,7 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
 
 <body>
     <!--  Body Wrapper -->
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-        data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar Start -->
         <aside class="left-sidebar">
             <!-- Sidebar scroll-->
@@ -106,7 +107,7 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
 
                 <!-- Sidebar navigation-->
                 <?php
-                include_once ("sidebar.php");
+                include_once("sidebar.php");
                 ?>
                 <!-- End Sidebar navigation -->
 
@@ -118,7 +119,7 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
         <div class="body-wrapper">
             <!--  Header Start -->
             <?php
-            include_once ("header.php");
+            include_once("header.php");
             ?>
             <!--  Header End -->
 
@@ -131,67 +132,9 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
                             <div class="col-lg-12 d-flex align-items-stretch">
                                 <div class="card w-100">
                                     <div class="card-body p-10">
-                                        <h5 class="card-title fw-semibold mb-4">Articles is approved</h5>
-
-                                        <h8>Welcome to Marketing Manager's dashboard! Here, you can</h8>
-                                        <a href="#">download all </a>
-                                        <h8>the documents you need for your work conveniently and quickly. Browse the
-                                            list of documents and select the information needed to support your work.
-                                        </h8>
-                                        <div class="d-flex justify-content-end">
-                                            <br>
-                                            <div class="ms-auto">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Filter by Magazine
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Something else here</a>
-                                                        </li>
-                                                        <li>
-                                                            <hr class="dropdown-divider">
-                                                        </li>
-                                                        <li><a class="dropdown-item" href="#">Separated link</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Filter by Faculty
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Something else here</a>
-                                                        </li>
-                                                        <li>
-                                                            <hr class="dropdown-divider">
-                                                        </li>
-                                                        <li><a class="dropdown-item" href="#">Separated link</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="btn-group">
-                                                    <button type="submit" class="btn btn-primary me-2" id="downloadAll"
-                                                        name="btnSubmit">
-                                                        Download All
-                                                    </button>
-                                                </div>
-                                                <div class="btn-group">
-                                                    <button type="submit" class="btn btn-primary me-2" id="downloadAll"
-                                                        name="btnSubmit">
-                                                        Download
-                                                    </button>
-                                                </div>
+                                        <h5 class="card-title fw-semibold mb-4">Articles Management</h5>
 
 
-
-                                            </div>
-                                        </div>
                                         <div><br></div>
 
 
@@ -199,9 +142,19 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
                                             <table id="dataTableExample" class="table text-nowrap mb-0 align-middle">
                                                 <thead class="text-dark fs-4">
                                                     <tr>
-                                                        <th
-                                                            class="border-bottom-0 d-flex justify-content-center align-items-center">
-                                                            <h6 class="fw-semibold mb-0">Download</h6>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <form action="../../../download.php" method="post" enctype="multipart/form-data">
+                                                                <input type="hidden" name="articlePublicId" id="articlePublicId" value="<?= $row['articleId'] ?>">
+                                                                <button type="submit" class="btn btn-primary btn-floating">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                                                    </svg>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                        <th class="border-bottom-0 d-flex justify-content-center align-items-center">
+
                                                         </th>
                                                         <th class="border-bottom-0">
                                                             <h6 class="fw-semibold mb-0">Title of article</h6>
@@ -210,78 +163,133 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
                                                             <h6 class="fw-semibold mb-0">Submit date</h6>
                                                         </th>
                                                         <th class="border-bottom-0">
-                                                            <h6 class="fw-semibold mb-0">Magazine</h6>
+                                                            <h6 class="fw-semibold mb-0">Magazine Name</h6>
                                                         </th>
 
                                                         <th class="border-bottom-0">
                                                             <h6 class="fw-semibold mb-0">Status public</h6>
                                                         </th>
-                                                        <th class="border-bottom-0">
-                                                            <h6 class="fw-semibold mb-0">Action</h6>
-                                                        </th>
+
+                                                        <?php
+                                                        if ($userRole != ROLE_ADMIN && $userRole != ROLE_UNIVERSITY_MARKETING_MANAGER) {
+                                                        ?>
+                                                            <<th class="border-bottom-0">
+                                                                <h6 class="fw-semibold mb-0">Action</h6>
+                                                                </th>
+                                                            <?php
+                                                        } else {
+                                                        } ?>
+
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <?php
-                                                    $re = mysqli_query($conn, "SELECT * FROM articles WHERE status = 1");
+                                                <?php
+                                                $username = $_SESSION['username']; 
+                                                $user_query = "SELECT * FROM users WHERE username = '$username'";
+                                                $user_result = $conn->query($user_query);
 
-                                                    while ($row = mysqli_fetch_assoc($re)) {
-                                                        if ($row['magazineId'] == 1) {
-                                                            $role = 'Magazine 1';
-                                                        } elseif ($row['magazineId'] == 2) {
-                                                            $role = 'student';
+                                                if ($user_result->num_rows > 0) {
+                                                    $user_row = $user_result->fetch_assoc();
+                                                    $user_id = $user_row['userId'];
+
+                                                    
+                                                    $role_query = "SELECT roleId FROM users WHERE userId = '$user_id'";
+                                                    $role_result = $conn->query($role_query);
+
+                                                    if ($role_result->num_rows > 0) {
+                                                        $role_row = $role_result->fetch_assoc();
+                                                        $user_role = $role_row['roleId'];
+
+                                                        
+                                                        if ($user_role == "1" || $user_role == "4") {
+                                                            
+                                                            $sql_articles = "SELECT articles.*, magazine.magazineName 
+                                                                             FROM articles 
+                                                                             INNER JOIN magazine ON articles.magazineId = magazine.magazineId";
+                                                        } else {
+                                                           
+                                                            $user_faculty_id = $user_row['facultyId']; 
+                                                            $sql_articles = "SELECT articles.*, magazine.magazineName 
+                                                                             FROM articles 
+                                                                             INNER JOIN magazine ON articles.magazineId = magazine.magazineId 
+                                                                             INNER JOIN users ON articles.authorId = users.userId
+                                                                             WHERE users.facultyId = $user_faculty_id";
                                                         }
-                                                        $showStatus = $row['showStatus'] == 0 ? 'None' : 'Public';
-                                                        $badgeClass = $row['showStatus'] == 0 ? 'bg-danger' : 'bg-primary';
-                                                        ?>
-                                                        <tr>
-                                                            <td
-                                                                class="border-bottom-0 d-flex justify-content-center align-items-center">
-                                                                <div class="d-flex align-items-center gap-2">
-                                                                    <input type="checkbox" class="form-check-input"
-                                                                        id="checkDefault">
-                                                                </div>
-                                                            </td>
-                                                            <td class="border-bottom-0">
-                                                                <h6 class="fw-semibold mb-1">
-                                                                    <?= $row['title'] ?>
-                                                                </h6>
-                                                                <span class="fw-normal">
-                                                                    <?= $row['authorId'] ?>
-                                                                </span>
-                                                            </td>
-                                                            <td class="border-bottom-0">
-                                                                <p class="mb-0 fw-normal">
-                                                                    <?= $row['submitDate'] ?>
-                                                                </p>
-                                                            </td>
-                                                            <td class="border-bottom-0">
-                                                                <h6 class="fw-semibold mb-0 fs-4">
-                                                                    <?= $row['magazineId'] ?>
-                                                                </h6>
-                                                            </td>
-                                                            <td class="border-bottom-0">
-                                                                <div class="d-flex align-items-center gap-2">
-                                                                    <span
-                                                                        class="badge <?= $badgeClass ?> rounded-3 fw-semibold">
-                                                                        <?= $showStatus ?>
-                                                                    </span>
-                                                                </div>
-                                                            </td>
-                                                            <td class="border-bottom-0">
-                                                                <div class="d-flex align-items-center gap-2">
-                                                                    <label class="switch"
-                                                                        onclick="toggleStatus(this, <?php echo $row['articleId']; ?>)">
-                                                                        <input type="checkbox" <?php echo ($row["showStatus"] == 1) ? 'checked' : ''; ?>>
-                                                                        <span class="slider"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <?php
+
+                                                        $result = $conn->query($sql_articles);
                                                     }
-                                                    ?>
-                                                </tbody>
+
+
+                                                    if ($result->num_rows > 0) {
+                                                        while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                            <tr>
+                                                                <td class="border-bottom-0 d-flex justify-content-center align-items-center">
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <form action="../../../download.php" method="post" enctype="multipart/form-data">
+                                                                            <input type="hidden" name="articlePublicId" id="articlePublicId" value="<?= $row['articleId'] ?>">
+                                                                            <button type="submit" class="btn btn-primary btn-floating">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                                                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                                                                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                                                                </svg>
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="border-bottom-0">
+                                                                    <h6 class="fw-semibold mb-1">
+                                                                        <?= $row['title'] ?>
+                                                                    </h6>
+                                                                    <span class="fw-normal">
+                                                                        <?= $row['authorId'] ?>
+                                                                    </span>
+                                                                </td>
+                                                                <td class="border-bottom-0">
+                                                                    <p class="mb-0 fw-normal">
+                                                                        <?= $row['submitDate'] ?>
+                                                                    </p>
+                                                                </td>
+                                                                <td class="border-bottom-0">
+                                                                    <h6 class="fw-semibold mb-0 fs-4">
+                                                                        <?= $row['magazineName'] ?>
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="border-bottom-0">
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <span class="badge <?= $row['showStatus'] == 0 ? 'bg-danger' : 'bg-primary' ?> rounded-3 fw-semibold">
+                                                                            <?= $row['showStatus'] == 0 ? 'None' : 'Public' ?>
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
+
+                                                                <td class="border-bottom-0">
+                                                                    <?php
+                                                                    if ($userRole != ROLE_ADMIN && $userRole != ROLE_UNIVERSITY_MARKETING_MANAGER) {
+                                                                    ?>
+                                                                        <div class="d-flex align-items-center gap-2">
+                                                                            <label class="switch" onclick="toggleStatus(this, <?= $row['articleId']; ?>)">
+                                                                                <input type="checkbox" <?= ($row["showStatus"] == 1) ? 'checked' : ''; ?>>
+                                                                                <span class="slider"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    <?php
+                                                                    } else {
+                                                                        // Add any additional content for admin users if needed
+                                                                    }
+                                                                    ?>
+
+                                                                </td>
+                                                            </tr>
+                                                <?php
+                                                        }
+                                                    } else {
+                                                        echo "No data found!";
+                                                    }
+                                                } else {
+                                                   
+                                                    echo "No data User.";
+                                                }
+                                                ?>
 
 
 
@@ -297,7 +305,9 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
                     </div>
                 </div>
             </div>
-
+            <?php
+            include_once("footer.php");
+            ?>
         </div>
     </div>
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
@@ -333,30 +343,28 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER], $conn);
 
     <script>
         function toggleStatus(label, articleId) {
-    var checkbox = label.querySelector('input[type="checkbox"]');
-    checkbox.checked = !checkbox.checked;
-    
-    // Gửi yêu cầu AJAX để cập nhật trạng thái trong cơ sở dữ liệu
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../../Backend/update_showStatus.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            // Xử lý phản hồi từ máy chủ
-            var response = JSON.parse(xhr.responseText);
-            // Cập nhật badgeClass và showStatus
-            var badgeClass = response.badgeClass;
-            var showStatus = response.showStatus;
-            // Cập nhật badge trên giao diện
-            var badgeElement = label.closest('tr').querySelector('.badge');
-            badgeElement.className = "badge " + badgeClass + " rounded-3 fw-semibold";
-            badgeElement.innerText = showStatus;
+            var checkbox = label.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+
+         
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "../../Backend/update_showStatus.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                 
+                    var response = JSON.parse(xhr.responseText);
+                    
+                    var badgeClass = response.badgeClass;
+                    var showStatus = response.showStatus;
+                   
+                    var badgeElement = label.closest('tr').querySelector('.badge');
+                    badgeElement.className = "badge " + badgeClass + " rounded-3 fw-semibold";
+                    badgeElement.innerText = showStatus;
+                }
+            };
+            xhr.send("articleId=" + articleId + "&showStatus=" + (checkbox.checked ? 1 : 0));
         }
-    };
-    xhr.send("articleId=" + articleId + "&showStatus=" + (checkbox.checked ? 1 : 0));
-}
-
-
     </script>
 </body>
 
