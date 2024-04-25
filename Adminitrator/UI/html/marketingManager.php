@@ -287,7 +287,11 @@ checkAccess([ROLE_ADMIN, ROLE_UNIVERSITY_MARKETING_MANAGER, ROLE_MARKETING_COORD
                                                     }
                                                 } else {
                                                    
+<<<<<<< HEAD
                                                     echo "No data User.";
+=======
+                                                    echo "Không tìm thấy thông tin người dùng.";
+>>>>>>> b39f62423b78a1b2a83dce1792d1fa4584f91fd7
                                                 }
                                                 ?>
 

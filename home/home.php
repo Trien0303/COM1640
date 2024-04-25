@@ -36,10 +36,17 @@
 <div class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
     <?php
+<<<<<<< HEAD
 
 $username = $_SESSION['username']; 
 
 
+=======
+// Lấy thông tin đăng nhập của người dùng từ session
+$username = $_SESSION['username']; // Giả sử bạn lưu username trong session
+
+// Truy vấn cơ sở dữ liệu để lấy thông tin về người dùng, bao gồm cả facultyId
+>>>>>>> b39f62423b78a1b2a83dce1792d1fa4584f91fd7
 $user_query = "SELECT * FROM users WHERE username = '$username'";
 $user_result = $conn->query($user_query);
 
@@ -58,7 +65,11 @@ if ($user_result->num_rows > 0) {
 ?>      
             <div class="card-header">
                 <div class="col">
+<<<<<<< HEAD
                     <div class="card h-100 ">
+=======
+                    <div class="card h-100 " style="height: 100px;">
+>>>>>>> b39f62423b78a1b2a83dce1792d1fa4584f91fd7
                         <img src="<?= $row['image'] ?>" class="card-img-top" alt="<?= basename($row['image']) ?>">
                         <div class="card-body">
                             <h5 class="card-title">
@@ -94,8 +105,13 @@ if ($user_result->num_rows > 0) {
         echo "No data found!";
     }
 } else {
+<<<<<<< HEAD
 
     echo "No data of user.";
+=======
+    // Xử lý khi không tìm thấy thông tin người dùng
+    echo "Không tìm thấy thông tin người dùng.";
+>>>>>>> b39f62423b78a1b2a83dce1792d1fa4584f91fd7
 }
 ?>
 

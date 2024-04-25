@@ -251,7 +251,11 @@ checkAccess([ROLE_ADMIN], $conn);
                                                                     </td>
                                                                     <td class='border-bottom-0'>
                                                                         <?php
+<<<<<<< HEAD
                                                                       
+=======
+                                                                        // Lấy tên của vai trò từ bảng roles
+>>>>>>> b39f62423b78a1b2a83dce1792d1fa4584f91fd7
                                                                         $roleId = $row["roleId"];
                                                                         $roleSql = "SELECT * FROM roles WHERE roleId = $roleId";
                                                                         $roleResult = $conn->query($roleSql);

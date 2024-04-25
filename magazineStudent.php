@@ -121,7 +121,11 @@ if (isset($_SESSION['return']) && $_SESSION['return'] !== null) {
                                         while ($row = $result->fetch_assoc()) {
                                            
                                             $closureDate = $row["closureDate"];
+<<<<<<< HEAD
                                             $disabled = ($currentDate > $closureDate) ? "disabled" : ""; 
+=======
+                                            $disabled = ($currentDate > $closureDate) ? "disabled" : ""; // Nếu ngày thực tế vượt quá closureDate, nút sẽ bị vô hiệu hóa
+>>>>>>> b39f62423b78a1b2a83dce1792d1fa4584f91fd7
 
                                            
                                     ?>

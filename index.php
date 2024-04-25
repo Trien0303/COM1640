@@ -52,7 +52,11 @@ include_once("./Adminitrator/UI/html/footer.php");
 
 <script>
 	function confirmLogout() {
+<<<<<<< HEAD
 		
+=======
+		// Sử dụng SweetAlert2 thay vì hàm confirm
+>>>>>>> b39f62423b78a1b2a83dce1792d1fa4584f91fd7
 		Swal.fire({
 			title: 'Are you sure?',
 			text: 'Are you sure you want to log out?',
